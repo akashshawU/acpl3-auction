@@ -1,4 +1,5 @@
-// src/app/(admin)/teams/page.tsx
+﻿// src/app/(admin)/teams/page.tsx
+export const dynamic = 'force-dynamic';
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -85,7 +86,7 @@ export default function AdminTeamsPage() {
               <button onClick={() => setShowCreate(false)} className="flex-1 rounded-lg border border-[#2A2A3A] py-2.5 text-sm hover:bg-[#1A1A24] transition-all">Cancel</button>
               <button onClick={createTeam} disabled={saving || !form.name}
                 className="flex-1 rounded-lg bg-[#FFD700] py-2.5 font-bold text-black hover:bg-[#C9A227] disabled:opacity-50 transition-all">
-                {saving ? '…' : 'Create'}
+                {saving ? 'â€¦' : 'Create'}
               </button>
             </div>
           </div>

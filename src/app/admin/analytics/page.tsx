@@ -1,4 +1,5 @@
-// src/app/(admin)/analytics/page.tsx
+﻿// src/app/(admin)/analytics/page.tsx
+export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import type { Player } from '@/types';
 import { AnalyticsCharts } from './AnalyticsCharts';

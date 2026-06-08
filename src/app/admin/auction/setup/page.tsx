@@ -1,4 +1,5 @@
-// src/app/(admin)/auction/setup/page.tsx
+﻿// src/app/(admin)/auction/setup/page.tsx
+export const dynamic = 'force-dynamic';
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -128,7 +129,7 @@ export default function AuctionSetupPage() {
       <div className="rounded-xl border border-[#2A2A3A] bg-[#111118] p-5">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-[#FFD700]">Auction Order</h2>
-          <span className="text-xs text-gray-400">{players.length} players · drag to reorder</span>
+          <span className="text-xs text-gray-400">{players.length} players Â· drag to reorder</span>
         </div>
         <div className="space-y-1.5 max-h-96 overflow-y-auto">
           {players.map((p, i) => {
@@ -172,7 +173,7 @@ export default function AuctionSetupPage() {
       </div>
 
       <Link href="/admin/auction/control" className="block text-center text-sm text-[#FFD700] hover:underline">
-        Go to Live Control →
+        Go to Live Control â†’
       </Link>
     </div>
   );

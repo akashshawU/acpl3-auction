@@ -1,4 +1,5 @@
-import { prisma } from '@/lib/prisma';
+﻿import { prisma } from '@/lib/prisma';
+export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { AuditLogTable } from '@/components/admin/AuditLog';
 import { Users, CheckCircle, Trophy, Inbox, Shield, Gavel, BarChart3 } from 'lucide-react';
@@ -74,7 +75,7 @@ export default async function AdminDashboard() {
                 <span className="text-sm font-semibold">{t.name}</span>
               </div>
               <div className="text-xs text-gray-400">
-                {t.players.length} players · {t.remainingPurse}pts left
+                {t.players.length} players &middot; {t.remainingPurse}pts left
               </div>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#2A2A3A]">
                 <div

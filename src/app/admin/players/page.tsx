@@ -1,4 +1,5 @@
-// src/app/(admin)/players/page.tsx
+﻿// src/app/(admin)/players/page.tsx
+export const dynamic = 'force-dynamic';
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
@@ -83,7 +84,7 @@ export default function AdminPlayersPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Search players…"
+            placeholder="Search playersâ€¦"
             className="w-full rounded-lg border border-[#2A2A3A] bg-[#111118] pl-9 pr-3 py-2 text-sm outline-none focus:border-[#FFD700] transition-colors"
           />
         </div>

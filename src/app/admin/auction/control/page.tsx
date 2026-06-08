@@ -1,4 +1,5 @@
-// src/app/(admin)/auction/control/page.tsx
+﻿// src/app/(admin)/auction/control/page.tsx
+export const dynamic = 'force-dynamic';
 'use client';
 
 import { useAuction } from '@/hooks/useAuction';
@@ -33,7 +34,7 @@ export default function AuctionControlPage() {
           <div className="flex items-center gap-2 mt-1">
             {connected
               ? <><Wifi className="h-3 w-3 text-green-400" /><span className="text-xs text-green-400">Live</span></>
-              : <><WifiOff className="h-3 w-3 text-red-400" /><span className="text-xs text-red-400">Reconnecting…</span></>
+              : <><WifiOff className="h-3 w-3 text-red-400" /><span className="text-xs text-red-400">Reconnectingâ€¦</span></>
             }
             <span className="text-xs text-gray-500">|</span>
             <span className={`text-xs font-medium ${status === 'LIVE' ? 'text-green-400' : status === 'PAUSED' ? 'text-yellow-400' : 'text-gray-400'}`}>
