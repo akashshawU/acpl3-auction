@@ -1,5 +1,4 @@
 ﻿// src/app/(admin)/auction/control/page.tsx
-export const dynamic = 'force-dynamic';
 'use client';
 
 import { useAuction } from '@/hooks/useAuction';
