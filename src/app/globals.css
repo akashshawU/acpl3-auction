@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-gold: #FFD700;
+  --color-gold-muted: #C9A227;
+  --color-gold-dark: #8B6914;
+  --color-auction-bg: #0A0A0F;
+  --color-surface: #111118;
+  --color-surface-2: #1A1A24;
+  --color-border: #2A2A3A;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-auction-bg);
+  color: #F8FAFC;
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-surface); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3A3A4A; }
+
+/* Gold shimmer for Elite badge */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.elite-shimmer {
+  background: linear-gradient(90deg, #FFD700, #FFF8DC, #FFD700, #C9A227);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Auction live screen font */
+.font-display {
+  font-family: var(--font-rajdhani), 'Rajdhani', sans-serif;
+}
