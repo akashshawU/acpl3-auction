@@ -2,32 +2,33 @@
 export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { AuditLogTable } from '@/components/admin/AuditLog';
+import { TeamStatusGrid } from '@/components/admin/TeamStatusGrid';
 import { Users, CheckCircle, Trophy, Inbox, Shield, Gavel, BarChart3 } from 'lucide-react';
 
 async function getStats() {
-  const [total, approved, sold, unsold, teams, recentLogs] = await Promise.all([
+  const [total, approved, sold, unsold, teamCount, recentLogs] = await Promise.all([
     prisma.player.count(),
     prisma.player.count({ where: { status: 'APPROVED' } }),
     prisma.player.count({ where: { status: 'SOLD' } }),
     prisma.player.count({ where: { status: 'UNSOLD' } }),
-    prisma.team.findMany({ include: { players: { where: { status: 'SOLD' } } } }),
+    prisma.team.count(),
     prisma.auditLog.findMany({
       orderBy: { createdAt: 'desc' }, take: 20,
       include: { user: { select: { name: true } }, player: { select: { fullName: true } } },
     }),
   ]);
-  return { total, approved, sold, unsold, teams, recentLogs };
+  return { total, approved, sold, unsold, teamCount, recentLogs };
 }
 
 export default async function AdminDashboard() {
-  const { total, approved, sold, unsold, teams, recentLogs } = await getStats();
+  const { total, approved, sold, unsold, teamCount, recentLogs } = await getStats();
 
   const statCards = [
-    { label: 'Total Players', value: total,    icon: Users,        color: 'text-blue-400'    },
-    { label: 'In Queue',      value: approved,  icon: CheckCircle,  color: 'text-green-400'   },
-    { label: 'Sold',          value: sold,      icon: Trophy,       color: 'text-[#FFD700]'   },
-    { label: 'Unsold',        value: unsold,    icon: Inbox,        color: 'text-gray-400'    },
-    { label: 'Teams',         value: teams.length, icon: Shield,    color: 'text-purple-400'  },
+    { label: 'Total Players', value: total,      icon: Users,       color: 'text-blue-400'   },
+    { label: 'In Queue',      value: approved,   icon: CheckCircle, color: 'text-green-400'  },
+    { label: 'Sold',          value: sold,       icon: Trophy,      color: 'text-[#FFD700]'  },
+    { label: 'Unsold',        value: unsold,     icon: Inbox,       color: 'text-gray-400'   },
+    { label: 'Teams',         value: teamCount,  icon: Shield,      color: 'text-purple-400' },
   ];
 
   return (
@@ -64,28 +65,10 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* Team summary */}
+      {/* Team summary — client component for inline purse editing */}
       <div>
         <h2 className="mb-3 text-sm font-semibold text-gray-400">Team Status</h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {teams.map(t => (
-            <div key={t.id} className="rounded-xl border border-[#2A2A3A] bg-[#111118] p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: t.color ?? '#6B7280' }} />
-                <span className="text-sm font-semibold">{t.name}</span>
-              </div>
-              <div className="text-xs text-gray-400">
-                {t.players.length} players &middot; {t.remainingPurse}pts left
-              </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#2A2A3A]">
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{ width: `${(t.remainingPurse / t.purse) * 100}%`, backgroundColor: t.color ?? '#FFD700' }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+        <TeamStatusGrid />
       </div>
 
       {/* Audit Log */}

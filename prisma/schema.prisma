@@ -8,6 +8,11 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum AuctionType {
+  DEMO
+  LIVE
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -43,6 +48,19 @@ model Player {
   runOuts        Int   @default(0)
   momAwards      Int   @default(0)
 
+  // Contact
+  mobileNumber  String?
+  whatsappNumber String?
+
+  // Profile extras
+  bio                      String?
+  strengths                String?
+  preferredBattingPosition Int?
+  preferredBowlingPhase    String?
+
+  // AI scouting note — hardcoded per player, displayed on live auction screen
+  aiRecommendation String?
+
   status       String @default("APPROVED")
   basePrice    Int    @default(10)
   soldPrice    Int?
@@ -53,8 +71,9 @@ model Player {
   team         Team?  @relation(fields: [teamId], references: [id])
   photoUrl     String?
 
-  bids      Bid[]
-  auditLogs AuditLog[]
+  bids        Bid[]
+  auditLogs   AuditLog[]
+  performance PlayerPerformance?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -63,10 +82,52 @@ model Player {
   @@index([teamId])
 }
 
+model PlayerPerformance {
+  id       String @id @default(cuid())
+  playerId String @unique
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  // Batting
+  innings                  Int   @default(0)
+  runs                     Int   @default(0)
+  battingAverage           Float @default(0)
+  strikeRate               Float @default(0)
+  rankInBattingLeaderboard Int   @default(0)
+
+  // Bowling
+  wickets                  Int   @default(0)
+  economy                  Float @default(0)
+  bowlingAverage           Float @default(0)
+  rankInBowlingLeaderboard Int   @default(0)
+
+  // Fielding / all-round
+  dismissal Int @default(0)
+
+  // MVP
+  mvpScore             Float @default(0)
+  rankInMVPLeaderboard Int   @default(0)
+
+  // Calculated — always system-generated
+  cumulativeAuctionScore Float  @default(0)
+  casCategory            String @default("C")
+
+  // Admin override
+  adminScoreOverride Float?
+  overrideReason     String?
+
+  importedAt   DateTime?
+  lastEditedBy String?
+  lastEditedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Team {
   id             String  @id @default(cuid())
   name           String  @unique
   color          String?
+  logoUrl        String?
   purse          Int     @default(100)
   remainingPurse Int     @default(100)
 
@@ -79,21 +140,40 @@ model Team {
 }
 
 model AuctionSession {
-  id                  String    @id @default(cuid())
-  name                String    @default("ACPL 3 Player Auction")
-  status              String    @default("SCHEDULED")
-  timerSeconds        Int       @default(30)
-  bidIncrement        Int       @default(1)
+  id                  String      @id @default(cuid())
+  name                String      @default("ACPL 3 Player Auction")
+  type                AuctionType @default(DEMO)
+  status              String      @default("SCHEDULED")
+  timerSeconds        Int         @default(30)
+  bidIncrement        Int         @default(1)
   currentPlayerId     String?
   currentBid          Int?
   currentLeaderTeamId String?
   timerStartedAt      DateTime?
+  isArchived          Boolean     @default(false)
+  archivedAt          DateTime?
 
-  bids      Bid[]
-  auditLogs AuditLog[]
+  bids           Bid[]
+  auditLogs      AuditLog[]
+  auctionResults AuctionResult[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AuctionResult {
+  id          String         @id @default(cuid())
+  sessionId   String
+  session     AuctionSession @relation(fields: [sessionId], references: [id])
+  playerId    String
+  playerName  String
+  teamId      String
+  teamName    String
+  soldPrice   Int
+  auctionType AuctionType
+  createdAt   DateTime       @default(now())
+
+  @@index([sessionId])
 }
 
 model Bid {
